@@ -36,7 +36,7 @@ class ChainHashTable:
         bucket_chain = self.table[bucket]
         for item in bucket_chain:
             if item[0] == package_id:
-                return item[1]
+                return item
         return None
 
     def remove(self, package_id):
