@@ -27,7 +27,7 @@ class ChainHashTable:
     :return bucket within hash table
     """
     def hash_package(self, package):
-        bucket = hash(package.id) % len(self.table)
+        bucket = hash(package.package_id) % len(self.table)
         bucket = self.table[bucket]
         return bucket
 
@@ -64,7 +64,7 @@ class ChainHashTable:
     def remove(self, package):
         bucket = self.hash_package(package)
         if package in bucket:
-            bucket.remove[package]
+            bucket.remove(package)
             return True
         else:
             return False
