@@ -15,3 +15,7 @@ class Package:
         self.deadline = deadline
         self.weight = weight
         self.status = status
+
+    def __str__(self):
+        return f"ID: {self.id} | Address: {self.address} | City: {self.city} | Zip: {self.zip} | " \
+               f"Deadline: {self.deadline} | Weight: {self.weight} | Status: {self.status}"
