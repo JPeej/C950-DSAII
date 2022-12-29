@@ -56,6 +56,7 @@ def find_min_distance(truck):
     for i in range(len(truck.packages)):
         package_id = truck.packages[i]
         package_data = packageTable.search(package_id)
+        package_data[1].status = "En route"
         package_address = package_data[1].address
         package_index = addressTable.index(package_address)
         try:
@@ -90,7 +91,6 @@ def start_truck_route(truck):
         package, distance = find_min_distance(truck)
         deliver_package(truck, package, distance)
     return_to_hub(truck)
-    print(truck.mileage)
 
 
 load_package_data("Documentation/WGUPS Package File.csv")
@@ -105,4 +105,18 @@ start_truck_route(truck2)
 package_nine = packageTable.search(9)[1]
 package_nine.address = "410 S State St"
 start_truck_route(truck3)
+total_mileage = truck1.mileage + truck2.mileage + truck3.mileage
 
+
+class Main():
+    print("Joshua Perry | 007217228")
+    print("WGUPS Routing Performance Assessment")
+    print(f"Total mileage: {total_mileage}\n")
+
+    print("Please select one of the following options.")
+    menu_input = input("1: Print all package info.\n"
+                       "2: Print a single package info.\n"
+                       "3: Print truck mileage.\n")
+    if menu_input == 1:
+        print("test")
+        print(packageTable)
