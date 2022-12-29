@@ -6,13 +6,14 @@ INITIAL_LOCATION = "HUB"
 
 class Truck:
 
-    def __init__(self, packages, time):
+    def __init__(self, packages, initial_time):
         self.speed = SPEED
         self.capacity = CAPACITY
         self.mileage = INITIAL_MILEAGE
         self.location = INITIAL_LOCATION
         self.packages = packages
-        self.time = time
+        self.delivered_time = initial_time
+        self.departed_time = initial_time
 
     def __str__(self):
         return f"Mileage: {self.mileage} | Location: {self.location} | Packages: {self.packages}"

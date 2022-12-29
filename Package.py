@@ -15,7 +15,17 @@ class Package:
         self.deadline = deadline
         self.weight = weight
         self.status = status
+        self.delivered_time = None
+        self.departed_time = None
 
     def __str__(self):
         return f"ID: {self.id} | Address: {self.address} | City: {self.city} | Zip: {self.zip} | " \
-               f"Deadline: {self.deadline} | Weight: {self.weight} | Status: {self.status}"
+               f"Deadline: {self.deadline} | Weight: {self.weight}"
+
+    def time_status(self, queried_time):
+        if self.departed_time >= queried_time:
+            return "At hub"
+        elif self.delivered_time > queried_time:
+            return "En route"
+        else:
+            return f"Delivered @ {self.delivered_time}"

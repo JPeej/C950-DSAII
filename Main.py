@@ -7,6 +7,7 @@ from datetime import timedelta
 packageTable = ChainHashTable()
 distanceTable = []
 addressTable = []
+all_packages = []
 
 
 def load_package_data(file_name):
@@ -69,10 +70,12 @@ def find_min_distance(truck):
     return priority_package, min_distance
 
 
-def deliver_package(truck, package, distance):
+def delivery(truck, package, distance):
     time_to = distance / truck.speed * 60
-    truck.time = truck.time + timedelta(minutes=time_to)
-    package.status = f"Delivered @ {truck.time}"
+    truck.delivered_time = truck.delivered_time + timedelta(minutes=time_to)
+    package.status = f"Delivered @ {truck.delivered_time}"
+    package.departed_time = truck.departed_time
+    package.delivered_time = truck.delivered_time
     truck.mileage += distance
     truck.location = package.address
     truck.packages.remove(package.id)
@@ -89,7 +92,7 @@ def return_to_hub(truck):
 def start_truck_route(truck):
     while len(truck.packages) > 0:
         package, distance = find_min_distance(truck)
-        deliver_package(truck, package, distance)
+        delivery(truck, package, distance)
     return_to_hub(truck)
 
 
@@ -109,14 +112,53 @@ total_mileage = truck1.mileage + truck2.mileage + truck3.mileage
 
 
 class Main():
+    program_running = True
     print("Joshua Perry | 007217228")
     print("WGUPS Routing Performance Assessment")
-    print(f"Total mileage: {total_mileage}\n")
+    print(f"Total mileage: {total_mileage}")
 
-    print("Please select one of the following options.")
-    menu_input = input("1: Print all package info.\n"
-                       "2: Print a single package info.\n"
-                       "3: Print truck mileage.\n")
-    if menu_input == 1:
-        print("test")
-        print(packageTable)
+    while program_running:
+        print("\nPlease select one of the following options.")
+        menu_input = int(input("1: Print all package info.\n"
+                               "2: Print a single package info.\n"
+                               "3: Print truck mileage.\n"
+                               "4: Exit\n"
+                               "Enter: "))
+        if menu_input == 1:
+            all_input = int(input("\n1: No time constraint.\n"
+                                  "2: With time constraint.\n"
+                                  "Enter: "))
+            if all_input == 1:
+                for i in range(1, 41):
+                    print(packageTable.search(i)[1])
+            else:
+                print("\nPlease define a time in which package info will be constrained to.")
+                hour = int(input("Enter an hour (24 hour clock): "))
+                min = int(input("Enter a minute: "))
+                queried_time = timedelta(hours=hour, minutes=min)
+                for i in range(1, 41):
+                    package = packageTable.search(i)[1]
+                    status = package.time_status(queried_time)
+                    print(f"{package} | Status: {status}")
+        elif menu_input == 2:
+            package_id = int(input("\nEnter the ID of the package you wish to query: "))
+            single_input = int(input("1: No time constraint.\n"
+                                     "2: With time constraint.\n"
+                                     "Enter: "))
+            package = packageTable.search(package_id)[1]
+            if single_input == 1:
+                print(package)
+            else:
+                print("\nPlease define a time in which package info will be constrained to.")
+                hour = int(input("Enter an hour (24 hour clock): "))
+                min = int(input("Enter a minute: "))
+                queried_time = timedelta(hours=hour, minutes=min)
+                status = package.time_status(queried_time)
+                print(f"{package} | Status: {status}")
+        elif menu_input == 3:
+            print(f"\nTruck 1: {truck1.mileage}")
+            print(f"Truck 2: {truck2.mileage}")
+            print(f"Truck 3: {truck3.mileage}")
+            print(f"Total mileage: {total_mileage}")
+        elif menu_input == 4:
+            program_running = False
