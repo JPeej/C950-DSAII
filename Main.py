@@ -1,5 +1,6 @@
 """
 Joshua Perry 007217228
+Algorithm and program overview found in the Documentation directory.
 Screenshots are found in the Documentation directory.
 Referenced C950 WGUPS Project Implementation Steps - Example
 """
