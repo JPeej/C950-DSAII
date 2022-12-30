@@ -39,4 +39,4 @@ class Package:
         elif self.delivered_time > queried_time:
             return "En route"
         else:
-            return f"Delivered @ {self.delivered_time}"
+            return f"Delivered on time @ {self.delivered_time}"

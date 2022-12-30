@@ -54,21 +54,3 @@ class ChainHashTable:
                 return item
         return None
 
-    """
-    Remove package from hash table.
-    
-    -   Calculate bucket on hash and length of table
-        For each package in bucket:
-            If package in bucket:
-                Remove package
-        
-    Worst case: O(n)
-    The size of the bucket could scale to infinity and every value may have to be compared.
-    :parameter package_id: id to search for
-    """
-    def remove(self, package_id):
-        bucket = hash(package_id) % len(self.table)
-        bucket_chain = self.table[bucket]
-        for item in bucket_chain:
-            if item[0] == package_id:
-                bucket_chain.remove(item)

@@ -1,5 +1,7 @@
 """
 Joshua Perry 007217228
+Screenshots are found in the Documentation directory.
+Referenced C950 WGUPS Project Implementation Steps - Example
 """
 
 import csv
@@ -155,9 +157,11 @@ Process to deliver package once at location.
     Remove package from truck
     Remove package from package table
     
-Worst case: O(n)
-Removing a package must first find the package within a bucket in the package table. The bucket could scale to infinity.
-Hopefully proper hashing and growth of table leads to faster average time complexity.
+Worst case: O(1)
+Looping through the the packages in the truck is constant time. Big O notation gives an upper bound to another function
+in concern with it's end behavior. As the max amount of packages in a truck is 16, the end behavior for looping through
+n packages within a truck is a constant 16. This can be upper bound by a constant, c = 17, multiplied by 1. Therefore,
+O(1). 
 :parameter truck: truck on route
 :parameter package: package to deliver
 :parameter distance: distance traveled to address
@@ -171,8 +175,7 @@ def delivery(truck, package, distance):
     package.delivered_time = truck.delivered_time
     truck.mileage += distance
     truck.location = package.address
-    truck.packages.remove(package.id)
-    packageTable.remove(package.id)  # Worst case: O(n)
+    truck.packages.remove(package.id)  # Worst case: O(1) see above comment
 
 
 """
@@ -205,7 +208,7 @@ Start delivering packages for a truck.
         Deliver package
     Truck back to hub
     
-Worst case: O(n^2)
+Worst case: O(n)
 Looping through the the packages in the truck is constant time. Big O notation gives an upper bound to another function
 in concern with it's end behavior. As the max amount of packages in a truck is 16, the end behavior for looping through
 n packages within a truck is a constant 16. This can be upper bound by a constant, c = 17, multiplied by 1. Therefore,
@@ -215,34 +218,44 @@ The two methods within the while loop have been analyzed above.
 """
 
 def start_truck_route(truck):
-    while len(truck.packages) > 0:  # Worst case: O(1)
+    while len(truck.packages) > 0:  # Worst case: O(1) see above comment
         package, distance = find_min_distance(truck)  # Worst case: O(n)
-        delivery(truck, package, distance)  # Worst case: O(n)
+        delivery(truck, package, distance)  # Worst case: O(1)
     return_to_hub(truck) # Worst case: O(1)
 
 
-load_package_data("Documentation/WGUPS Package File.csv")
-load_distance_data("Documentation/WGUPS Distance Table.csv")
+"""
+The provided methods and packages are now used to calculate an approximation for shortest delivery mileage.
+Package, distance, and address data are loaded into their respective data structures.
+Three truck objects are created and packages are loaded manually. 
+Each truck in turn runs the self adjusting algorithm, start_truck_route, where it's total mileage is ultimately found.
+Before truck3 departs, package 9 has it's address updated.
+Finally, a total mileage across all three trucks is calculated. 
+Worst case: O(n^2)
+"""
+
+load_package_data("Documentation/WGUPS Package File.csv")  # Worst case: O(n)
+load_distance_data("Documentation/WGUPS Distance Table.csv")  # Worst case: O(n^2)
 
 # Heuristically and manually added packages to each truck.
 truck1 = Truck([1, 7, 13, 14, 15, 16, 19, 20, 21, 29, 30, 31, 34, 37, 39], timedelta(hours=8, minutes=00))
 truck2 = Truck([3, 4, 5, 6, 18, 25, 26, 36, 38, 40], timedelta(hours=9, minutes=5))
 truck3 = Truck([2, 8, 9, 10, 11, 12, 17, 22, 23, 24, 27, 28, 32, 33, 35], timedelta(hours=10, minutes=21))
 
-start_truck_route(truck1)
-start_truck_route(truck2)
+start_truck_route(truck1)  # Worst case: O(n)
+start_truck_route(truck2)  # Worst case: O(n)
 
 # Truck 3 doesn't leave until 10:20.
 # Package 9 isn't updated until 10:20.
 # Therefore, package updating before truck leaves is applicable.
-package_nine = packageTable.search(9)[1]
+package_nine = packageTable.search(9)[1]  # Worst case: O(n)
 package_nine.address = "410 S State St"
-start_truck_route(truck3)
+start_truck_route(truck3)  # Worst case: O(n)
 
 total_mileage = truck1.mileage + truck2.mileage + truck3.mileage
 
 """
-Start program.
+Start CLI to interact with data.
 Worst case: O(n)
     As only one operation can be done at a time
 """
@@ -264,7 +277,7 @@ class Main:
 
         # All package menu options
         if menu_input == 1:
-            all_input = int(input("\n1: No time constraint.\n"
+            all_input = int(input("\n1: End of day.\n"
                                   "2: With time constraint.\n"
                                   "Enter: "))
             # Print all packages after delivery
@@ -288,7 +301,7 @@ class Main:
         # Single package menu options
         elif menu_input == 2:
             package_id = int(input("\nEnter the ID of the package you wish to query: "))
-            single_input = int(input("1: No time constraint.\n"
+            single_input = int(input("1: End of day.\n"
                                      "2: With time constraint.\n"
                                      "Enter: "))
             package = packageTable.search(package_id)[1]  # Worst case: O(n)
