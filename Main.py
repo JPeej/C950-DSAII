@@ -116,7 +116,7 @@ the current location.
     Return priority_package and min_distance
     
 Worst case: O(n)
-Looping through the the packages in the truck is constant time. Big O notation gives an upper bound to another function
+Looping through the packages in the truck is constant time. Big O notation gives an upper bound to another function
 in concern with it's end behavior. As the max amount of packages in a truck is 16, the end behavior for looping through
 n packages within a truck is a constant 16. This can be upper bound by a constant, c = 17, multiplied by 1. Therefore,
 O(1). 
@@ -133,7 +133,7 @@ def find_min_distance(truck):
     priority_package = None
     for i in range(len(truck.packages)):  # Worst case: O(1) see above comment
         package_id = truck.packages[i]
-        package_data = packageTable.search(package_id)  # Worst case O(n)
+        package_data = packageTable.lookup(package_id)  # Worst case O(n)
         package_data[1].status = "En route"
         package_address = package_data[1].address
         package_index = addressTable.index(package_address)
@@ -248,7 +248,7 @@ start_truck_route(truck2)  # Worst case: O(n)
 # Truck 3 doesn't leave until 10:20.
 # Package 9 isn't updated until 10:20.
 # Therefore, package updating before truck leaves is applicable.
-package_nine = packageTable.search(9)[1]  # Worst case: O(n)
+package_nine = packageTable.lookup(9)[1]  # Worst case: O(n)
 package_nine.address = "410 S State St"
 start_truck_route(truck3)  # Worst case: O(n)
 
@@ -284,7 +284,7 @@ class Main:
             if all_input == 1:
                 eod = timedelta(hours=24)
                 for i in range(1, 41):
-                    package = packageTable.search(i)[1]  # Worst case: O(n)
+                    package = packageTable.lookup(i)[1]  # Worst case: O(n)
                     status = package.time_status(eod)
                     print(f"{package} | Status: {status}")
             # Print all packages with a time constraint
@@ -294,7 +294,7 @@ class Main:
                 min = int(input("Enter a minute: "))
                 queried_time = timedelta(hours=hour, minutes=min)
                 for i in range(1, 41):
-                    package = packageTable.search(i)[1]  # Worst case: O(n)
+                    package = packageTable.lookup(i)[1]  # Worst case: O(n)
                     status = package.time_status(queried_time)
                     print(f"{package} | Status: {status}")
 
@@ -304,7 +304,7 @@ class Main:
             single_input = int(input("1: End of day.\n"
                                      "2: With time constraint.\n"
                                      "Enter: "))
-            package = packageTable.search(package_id)[1]  # Worst case: O(n)
+            package = packageTable.lookup(package_id)[1]  # Worst case: O(n)
             # Print single package after delivery
             if single_input == 1:
                 eod = timedelta(hours=24)

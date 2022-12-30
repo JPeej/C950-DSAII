@@ -46,7 +46,7 @@ class ChainHashTable:
     :parameter package_id: id to search for
     :return package: package if found
     """
-    def search(self, package_id):
+    def lookup(self, package_id):
         bucket = hash(package_id) % len(self.table)
         bucket_chain = self.table[bucket]
         for item in bucket_chain:
