@@ -22,6 +22,17 @@ class Package:
         return f"ID: {self.id} | Address: {self.address} | City: {self.city} | Zip: {self.zip} | " \
                f"Deadline: {self.deadline} | Weight: {self.weight}"
 
+    """
+    Set the status for a package dependent upon time.
+    
+    -   If queried time is less than or equal to departed time, set to at hub
+        If queried time is less than delivered time, set to en route
+        Else set to delivered @ time
+        
+    Worst case: O(1)
+    All operations are constant.
+    :parameter queried_time: time constraint
+    """
     def time_status(self, queried_time):
         if self.departed_time >= queried_time:
             return "At hub"

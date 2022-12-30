@@ -4,6 +4,9 @@ INITIAL_MILEAGE = 0
 INITIAL_LOCATION = "HUB"
 
 
+"""
+Truck class to hold and deliver packages.
+"""
 class Truck:
 
     def __init__(self, packages, initial_time):

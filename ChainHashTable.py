@@ -2,35 +2,50 @@
 Reference ZyBooks 7.8.2: Hash table with chaining
 Reference C950 - Webinar-1 - Let’s Go Hashing - Complete Python Code
 User created hash table with chaining for collision handling.
-hash_package() : O(1)
 insert()       : O(1)
-lookup()       : O(n)
+search()       : O(n)
 remove()       : O(n)
-update()       : O(n)
 """
 
 
 class ChainHashTable:
-    """
-    Constructor for ChainHashTable class.
-    Default value of initial table size is 10.
-    Creates ten buckets. Chaining expected for practice.
-    """
 
     def __init__(self, initial_capacity=10):
         self.table = []
         for i in range(initial_capacity):
             self.table.append([])
 
-    def insert_update(self, package_id, package):
+    """
+    Insert package into hash table. 
+    
+    -   Calculate bucket on hash and length of table
+        Append (id, package) into bucket
+        
+    Worst case: O(1)
+    Appending to the end of a list is constant time and not dependent upon size of the list.
+    :parameter package_id: value to hash
+    :parameter package: package to insert
+    """
+    def insert(self, package_id, package):
         bucket = hash(package_id) % len(self.table)
         bucket_chain = self.table[bucket]
-        for item in bucket_chain:
-            if item[0] == package_id:
-                item[1] = package
         package_kv = [package_id, package]
         bucket_chain.append(package_kv)
 
+    """
+    Search for a package in the hash table.
+    
+    -   Calculate bucket on hash and length of table
+        For each package in bucket:
+            If package in bucket:
+                Return package:
+            Else return None
+        
+    Worst case: O(n)
+    The size of the bucket could scale to infinity and every value may have to be compared.
+    :parameter package_id: id to search for
+    :return package: package if found
+    """
     def search(self, package_id):
         bucket = hash(package_id) % len(self.table)
         bucket_chain = self.table[bucket]
@@ -39,6 +54,18 @@ class ChainHashTable:
                 return item
         return None
 
+    """
+    Remove package from hash table.
+    
+    -   Calculate bucket on hash and length of table
+        For each package in bucket:
+            If package in bucket:
+                Remove package
+        
+    Worst case: O(n)
+    The size of the bucket could scale to infinity and every value may have to be compared.
+    :parameter package_id: id to search for
+    """
     def remove(self, package_id):
         bucket = hash(package_id) % len(self.table)
         bucket_chain = self.table[bucket]
