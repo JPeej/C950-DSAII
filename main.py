@@ -132,24 +132,23 @@ Searching through all packages within the package table is O(n) as the table can
 :return min_distance: distance to travel for next package 
 """
 
-def find_min_distance(truck):
+def find_min_distance(truck, i):
     min_distance = 30  # Arbitrary large number
     current_location = truck.location
     current_index = addressTable.index(current_location)
     priority_package = None
-    for i in range(len(truck.packages)):  # Worst case: O(n)
-        package_id = truck.packages[i]
-        package_data = packageTable.lookup(package_id)  # Worst case O(n)
-        package_data[1].status = "En route"
-        package_address = package_data[1].address
-        package_index = addressTable.index(package_address)
-        try:
-            distance = distanceTable[current_index][package_index]
-        except IndexError:
-            distance = distanceTable[package_index][current_index]
-        if distance < min_distance:
-            min_distance = distance
-            priority_package = package_data[1]
+    package_id = truck.packages[i]
+    package_data = packageTable.lookup(package_id)  # Worst case O(n)
+    package_data[1].status = "En route"
+    package_address = package_data[1].address
+    package_index = addressTable.index(package_address)
+    try:
+        distance = distanceTable[current_index][package_index]
+    except IndexError:
+        distance = distanceTable[package_index][current_index]
+    if distance < min_distance:
+        min_distance = distance
+        priority_package = package_data[1]
     return priority_package, min_distance
 
 
@@ -220,8 +219,8 @@ The two methods within the while loop have been analyzed above.
 """
 
 def start_truck_route(truck):
-    while len(truck.packages) > 0:  # Worst case: O(n) see above comment
-        package, distance = find_min_distance(truck)  # Worst case: O(n^2)
+    for i in range(len(truck.packages)):  # Worst case: O(n) see above comment
+        package, distance = find_min_distance(truck, i)  # Worst case: O(n^2)
         delivery(truck, package, distance)  # Worst case: O(n)
     return_to_hub(truck) # Worst case: O(1)
 
