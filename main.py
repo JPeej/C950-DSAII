@@ -6,9 +6,9 @@ Referenced C950 WGUPS Project Implementation Steps - Example
 """
 
 import csv
-from Truck import Truck
-from ChainHashTable import ChainHashTable
-from Package import Package
+from truck import Truck
+from chain_hash_table import ChainHashTable
+from package import Package
 from datetime import timedelta
 
 packageTable = ChainHashTable()
@@ -26,9 +26,12 @@ Take a given CSV file containing package information and insert it into a hash t
             Create new package with parsed data
             Insert new package into hash table
             
-Worst case: O(n)
+Worst time complexity case: O(n)
 The amount of packages within the CSV file can grow up to infinity.
 As this function must parse each package, the function must scale with the size of the function in a linear fashion.
+Worst space complexity case: O(n)
+Each package is stored within a bucket within a hash table. The bucket acts as a list. Appending one new item to a list
+increases space use linearly as the number of items appended grows to infinity.
 :parameter file_name: name of CSV file
 """
 
@@ -66,10 +69,14 @@ Take a given CSV file containing package information and insert it into a list
         Increment limit
         Append location list to distance list
         
-Worst case: O(n^2)
+Worst time complexity case: O(n^2)
 Although only half on the table is read, the rows and/or columns may grow to infinity.
 Each row and column must be read. Implemented with nested for loops. Therefore, n^2.
 :parameter file_name: name of CSV file
+Worst space complexity case: O(n^2)
+The distance data is held within a 2D-array. The amount of space needed to capture all data within each row and column
+combination is space = row X column. As the number of rows and columns grow to infinity the space grows as such: 
+space = n X n = n^2.
 """
 
 def load_distance_data(file_name):
@@ -116,11 +123,9 @@ the current location.
             Set package as priority_package
     Return priority_package and min_distance
     
-Worst case: O(n)
-Looping through the packages in the truck is constant time. Big O notation gives an upper bound to another function
-in concern with it's end behavior. As the max amount of packages in a truck is 16, the end behavior for looping through
-n packages within a truck is a constant 16. This can be upper bound by a constant, c = 17, multiplied by 1. Therefore,
-O(1). 
+Worst case: O(n^2)
+Amount of packages is limited within truck, however, changes could be made easily to that constant. These changes could
+reach infinity. Therefore, O(n).
 Searching through all packages within the package table is O(n) as the table can scale to infinity.
 :parameter truck: delivery truck to route
 :return priority_package: next package to deliver
@@ -132,7 +137,7 @@ def find_min_distance(truck):
     current_location = truck.location
     current_index = addressTable.index(current_location)
     priority_package = None
-    for i in range(len(truck.packages)):  # Worst case: O(1) see above comment
+    for i in range(len(truck.packages)):  # Worst case: O(n)
         package_id = truck.packages[i]
         package_data = packageTable.lookup(package_id)  # Worst case O(n)
         package_data[1].status = "En route"
@@ -158,11 +163,9 @@ Process to deliver package once at location.
     Remove package from truck
     Remove package from package table
     
-Worst case: O(1)
-Looping through the the packages in the truck is constant time. Big O notation gives an upper bound to another function
-in concern with it's end behavior. As the max amount of packages in a truck is 16, the end behavior for looping through
-n packages within a truck is a constant 16. This can be upper bound by a constant, c = 17, multiplied by 1. Therefore,
-O(1). 
+Worst case: O(n)
+Amount of packages is limited within truck, however, changes could be made easily to that constant. These changes could
+reach infinity. Therefore, O(n).
 :parameter truck: truck on route
 :parameter package: package to deliver
 :parameter distance: distance traveled to address
@@ -176,7 +179,7 @@ def delivery(truck, package, distance):
     package.delivered_time = truck.delivered_time
     truck.mileage += distance
     truck.location = package.address
-    truck.packages.remove(package.id)  # Worst case: O(1) see above comment
+    truck.packages.remove(package.id)  # Worst case: O(n)
 
 
 """
@@ -209,19 +212,17 @@ Start delivering packages for a truck.
         Deliver package
     Truck back to hub
     
-Worst case: O(n)
-Looping through the the packages in the truck is constant time. Big O notation gives an upper bound to another function
-in concern with it's end behavior. As the max amount of packages in a truck is 16, the end behavior for looping through
-n packages within a truck is a constant 16. This can be upper bound by a constant, c = 17, multiplied by 1. Therefore,
-O(1). 
+Worst case: O(n^4)
+Amount of packages is limited within truck, however, changes could be made easily to that constant. These changes could
+reach infinity. Therefore, O(n).
 The two methods within the while loop have been analyzed above.
 :parameter truck: truck on route
 """
 
 def start_truck_route(truck):
-    while len(truck.packages) > 0:  # Worst case: O(1) see above comment
-        package, distance = find_min_distance(truck)  # Worst case: O(n)
-        delivery(truck, package, distance)  # Worst case: O(1)
+    while len(truck.packages) > 0:  # Worst case: O(n) see above comment
+        package, distance = find_min_distance(truck)  # Worst case: O(n^2)
+        delivery(truck, package, distance)  # Worst case: O(n)
     return_to_hub(truck) # Worst case: O(1)
 
 
